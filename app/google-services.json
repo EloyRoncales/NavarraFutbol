@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "155190679443",
+    "project_id": "navarrafutbol-2d3cb",
+    "storage_bucket": "navarrafutbol-2d3cb.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:155190679443:android:3ec2583cca7999e165fa66",
+        "android_client_info": {
+          "package_name": "com.example.navarrafutbol"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBr16kNkd2lC4hUuzeaqkCLvQ3--wVDaF4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

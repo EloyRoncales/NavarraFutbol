@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="12dp"
+    android:gravity="center_vertical">
+
+    <!-- Nombre del Equipo Local -->
+    <TextView
+        android:id="@+id/tvEquipoLocal"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="Equipo Local"
+        android:textSize="14sp"/>
+
+    <!-- Fecha del Partido -->
+
+    <!-- Nombre del Equipo Visitante -->
+    <TextView
+        android:id="@+id/tvFecha"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Fecha del Partido"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/tvEquipoVisitante"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="Equipo Visitante"
+        android:textSize="14sp"
+        android:gravity="end" />
+</LinearLayout>
