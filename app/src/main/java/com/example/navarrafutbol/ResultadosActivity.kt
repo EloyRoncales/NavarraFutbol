@@ -3,6 +3,7 @@ package com.example.navarrafutbol
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.SearchView
 import androidx.appcompat.app.AppCompatActivity
@@ -34,6 +35,11 @@ class ResultadosActivity : AppCompatActivity() {
         progressResultados   = findViewById(R.id.progressResultados)
         svBuscar             = findViewById(R.id.svBuscarEquipo)
         bottomNavigation     = findViewById(R.id.bottomNavigation)
+
+        val ivFiltro = findViewById<ImageView>(R.id.filtroImageView)
+        ivFiltro.setOnClickListener {
+            startActivity(Intent(this, FiltroCategoriasActivity::class.java))
+        }
 
         // 2. LayoutManager y estado inicial
         rvResultados.layoutManager = LinearLayoutManager(this)
