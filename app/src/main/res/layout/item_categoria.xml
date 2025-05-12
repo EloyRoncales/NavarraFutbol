@@ -1,25 +1,18 @@
-<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:padding="16dp"
     android:orientation="vertical"
-    android:paddingVertical="8dp">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
-    <!-- Título de la sección -->
     <TextView
         android:id="@+id/tvCategoria"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Primera Autonómica"
         android:textSize="18sp"
         android:textStyle="bold"
-        android:paddingBottom="4dp" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
-    <!-- Lista de partidos dentro de esta categoría -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvGrupos"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:nestedScrollingEnabled="false" />
-
+        android:layout_height="wrap_content"/>
 </LinearLayout>

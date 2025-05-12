@@ -8,7 +8,7 @@
     android:paddingHorizontal="8dp">
 
     <ImageView
-        android:id="@+id/ivEscudoLocal"
+        android:id="@+id/iv_escudo_local"
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:src="@drawable/escudo"
@@ -16,7 +16,7 @@
         android:contentDescription="Escudo local" />
 
     <TextView
-        android:id="@+id/tvEquipoLocal"
+        android:id="@+id/tv_equipo_local"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
@@ -24,7 +24,7 @@
         android:textSize="14sp" />
 
     <TextView
-        android:id="@+id/tvHora"
+        android:id="@+id/tv_hora"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="17:00"
@@ -32,7 +32,7 @@
         android:textSize="14sp" />
 
     <TextView
-        android:id="@+id/tvEquipoVisitante"
+        android:id="@+id/tv_equipo_visitante"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
@@ -41,7 +41,7 @@
         android:textSize="14sp" />
 
     <ImageView
-        android:id="@+id/ivEscudoVisitante"
+        android:id="@+id/iv_escudo_visitante"
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:layout_marginStart="4dp"

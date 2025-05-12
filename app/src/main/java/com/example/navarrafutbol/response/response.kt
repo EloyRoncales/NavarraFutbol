@@ -1,22 +1,21 @@
 package com.example.navarrafutbol.response
 
-import com.example.navarrafutbol.wrapper.*
-
 data class CategoriaResponse(
-    val categoria: String,
-    val grupos: GrupoWrapper
+    val id: Int?,
+    val categoria: String?,
+    val grupos: List<GrupoResponse>?
 )
 
 data class GrupoResponse(
-    val grupo: String,
-    val partidos: PartidoWrapper
+    val grupo: String?,
+    val partidos: List<PartidoResponse>?
 )
 
 data class PartidoResponse(
-    val id: Int,
-    val fecha: String,
-    val equipoLocal: String,
-    val equipoVisitante: String,
+    val id: Int?,
+    val fecha: String?,
+    val equipoLocal: String?,
+    val equipoVisitante: String?,
     val golesLocal: Int?,
     val golesVisitante: Int?
 )
