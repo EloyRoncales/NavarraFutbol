@@ -1,8 +1,9 @@
-// src/main/java/com/example/navarrafutbol/ResultadosActivity.kt
 package com.example.navarrafutbol
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
+import android.widget.ProgressBar
 import android.widget.SearchView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -19,29 +20,40 @@ import kotlinx.coroutines.launch
 class ResultadosActivity : AppCompatActivity() {
 
     private lateinit var rvResultados: RecyclerView
+    private lateinit var progressResultados: ProgressBar
     private lateinit var svBuscar: SearchView
-    private var todasCategorias: List<Categoria> = emptyList()
     private lateinit var bottomNavigation: BottomNavigationView
+    private var todasCategorias: List<Categoria> = emptyList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_resultados)
 
-        rvResultados = findViewById(R.id.rvResultados)
-        svBuscar = findViewById(R.id.svBuscarEquipo)
-        rvResultados.layoutManager = LinearLayoutManager(this)
+        // 1. Referencias
+        rvResultados         = findViewById(R.id.rvResultados)
+        progressResultados   = findViewById(R.id.progressResultados)
+        svBuscar             = findViewById(R.id.svBuscarEquipo)
+        bottomNavigation     = findViewById(R.id.bottomNavigation)
 
+        // 2. LayoutManager y estado inicial
+        rvResultados.layoutManager = LinearLayoutManager(this)
+        rvResultados.visibility    = View.GONE
+        progressResultados.visibility = View.VISIBLE
+        bottomNavigation.selectedItemId = R.id.nav_results
+
+        // 3. Carga de datos
         lifecycleScope.launch {
-            // Lista de IDs de categorías que quieres mostrar
-            val categoryIds = listOf(1, 2)
-            // Lanzamos todas las peticiones en paralelo
-            val deferred = categoryIds.map { id ->
-                async { RetrofitClient.api.getPartidos(id) }
-            }
+            val categoryIds = listOf(1, 2, 3)
+            val deferred    = categoryIds.map { id -> async { RetrofitClient.api.getPartidos(id) } }
             todasCategorias = deferred.awaitAll()
+
+            // 4. Asignar adapter y ocultar spinner
             rvResultados.adapter = CategoriaAdapter(todasCategorias)
+            progressResultados.visibility = View.GONE
+            rvResultados.visibility       = View.VISIBLE
         }
 
+        // 5. Filtro en tiempo real
         svBuscar.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String) = false
             override fun onQueryTextChange(newText: String): Boolean {
@@ -63,21 +75,15 @@ class ResultadosActivity : AppCompatActivity() {
             }
         })
 
-        bottomNavigation = findViewById(R.id.bottomNavigation)
-        bottomNavigation.selectedItemId = R.id.nav_results
-
+        // 6. Navegación inferior
         bottomNavigation.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.nav_news -> {
                     startActivity(Intent(this, NoticiasActivity::class.java))
                     true
                 }
-                R.id.nav_results -> {
-                    true
-                }
-                R.id.nav_favorites -> {
-                    true
-                }
+                R.id.nav_results -> true
+                R.id.nav_favorites -> true
                 R.id.nav_profile -> {
                     startActivity(Intent(this, PerfilActivity::class.java))
                     true

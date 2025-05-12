@@ -2,6 +2,8 @@ package com.example.navarrafutbol
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
@@ -15,32 +17,34 @@ import java.io.IOException
 class NoticiasActivity : AppCompatActivity() {
 
     private lateinit var recycler: RecyclerView
-    private val baseUrl = "https://noticiasapi-16ka.onrender.com/api/"
+    private lateinit var progressNoticias: ProgressBar
     private lateinit var bottomNavigation: BottomNavigationView
+    private val baseUrl = "https://noticiasapi-16ka.onrender.com/api/"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_noticias)
 
-        recycler = findViewById(R.id.recyclerNoticias)
+        // 1. Referencias y estado inicial
+        recycler           = findViewById(R.id.recyclerNoticias)
+        progressNoticias   = findViewById(R.id.progressNoticias)
+        bottomNavigation   = findViewById(R.id.bottomNavigation)
+
+        recycler.visibility         = View.GONE
+        progressNoticias.visibility = View.VISIBLE
+        bottomNavigation.selectedItemId = R.id.nav_news
 
         obtenerNoticias()
 
-        bottomNavigation = findViewById(R.id.bottomNavigation)
-        bottomNavigation.selectedItemId = R.id.nav_news
-
+        // Navegación inferior
         bottomNavigation.setOnItemSelectedListener { item ->
             when (item.itemId) {
-                R.id.nav_news -> {
-                    true
-                }
+                R.id.nav_news -> true
                 R.id.nav_results -> {
                     startActivity(Intent(this, ResultadosActivity::class.java))
                     true
                 }
-                R.id.nav_favorites -> {
-                    true
-                }
+                R.id.nav_favorites -> true
                 R.id.nav_profile -> {
                     startActivity(Intent(this, PerfilActivity::class.java))
                     true
@@ -51,7 +55,7 @@ class NoticiasActivity : AppCompatActivity() {
     }
 
     private fun obtenerNoticias() {
-        val client = OkHttpClient()
+        val client  = OkHttpClient()
         val request = Request.Builder()
             .url("${baseUrl}noticias")
             .build()
@@ -60,6 +64,8 @@ class NoticiasActivity : AppCompatActivity() {
             override fun onFailure(call: Call, e: IOException) {
                 runOnUiThread {
                     Toast.makeText(this@NoticiasActivity, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+                    // Ocultamos spinner aunque falle
+                    progressNoticias.visibility = View.GONE
                 }
             }
 
@@ -74,6 +80,9 @@ class NoticiasActivity : AppCompatActivity() {
                             intent.putExtra("contenido", noticia.contenido)
                             startActivity(intent)
                         }
+                        // Ocultar spinner y mostrar lista
+                        progressNoticias.visibility = View.GONE
+                        recycler.visibility         = View.VISIBLE
                     }
                 }
             }
