@@ -27,6 +27,8 @@
         <activity android:name="com.example.navarrafutbol.RegisterActivity" />
         <activity android:name="com.example.navarrafutbol.ResultadosActivity" />
         <activity android:name="com.example.navarrafutbol.PerfilActivity" />
+        <activity android:name="com.example.navarrafutbol.NoticiasActivity" />
+        <activity android:name="com.example.navarrafutbol.DetalleNoticiaActivity" />
     </application>
 
 </manifest>

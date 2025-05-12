@@ -1,7 +1,6 @@
 package com.example.navarrafutbol.model
 
 import com.google.gson.JsonElement
-import java.util.*
 
 data class Partido(
     val id: Int,
@@ -16,5 +15,3 @@ data class Partido(
     val fecha: String,
     val eventosPartido: JsonElement
 )
-
-

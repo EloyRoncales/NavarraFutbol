@@ -1,0 +1,71 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:background="@color/primary_green">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:background="@drawable/rounded_corner"
+        android:layout_marginTop="8dp"
+        android:elevation="4dp">
+
+
+        <!-- Titulo de la noticia -->
+        <TextView
+            android:id="@+id/tituloDetalle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="@color/primary_green"
+            android:paddingBottom="8dp"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:layout_marginBottom="12dp" />
+
+        <!-- Autor de la noticia -->
+        <TextView
+            android:id="@+id/autorDetalle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="@color/text_hint"
+            android:layout_marginBottom="4dp"
+            android:text="Por: [Autor]" />
+
+        <!-- Fecha de publicación -->
+        <TextView
+            android:id="@+id/fechaDetalle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textColor="@color/text_hint"
+            android:layout_marginBottom="16dp"
+            android:text="Fecha: [Fecha]" />
+
+        <!-- Contenido de la noticia -->
+        <TextView
+            android:id="@+id/contenidoDetalle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:textColor="@color/text"
+            android:lineSpacingExtra="6dp"
+            android:lineHeight="22sp"
+            android:text="Contenido de la noticia..."
+            android:layout_marginBottom="20dp"/>
+
+        <!-- Imagen destacada de la noticia (si se desea agregar una imagen) -->
+        <ImageView
+            android:id="@+id/imagenNoticia"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_marginBottom="16dp"
+            android:scaleType="centerCrop"
+            android:visibility="gone" /> <!-- La imagen puede ser opcional -->
+    </LinearLayout>
+</ScrollView>

@@ -72,7 +72,7 @@ class PerfilActivity : AppCompatActivity() {
         bottomNavigation.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.nav_news -> {
-                    startActivity(Intent(this, FiltroCategoriasActivity::class.java))
+                    startActivity(Intent(this, NoticiasActivity::class.java))
                     true
                 }
                 R.id.nav_results -> {
@@ -93,60 +93,40 @@ class PerfilActivity : AppCompatActivity() {
     private fun cargarDatosUsuario() {
         val currentUser = auth.currentUser
         if (currentUser != null) {
-            // Si el usuario inició sesión con Google, los datos del perfil están en currentUser
-            val googleDisplayName = currentUser.displayName
-            val googleEmail = currentUser.email
-
-            if (!googleDisplayName.isNullOrEmpty()) {
-                nombreUsuario.text = googleDisplayName
-            } else {
-                // Si no hay nombre en el perfil de Google, podrías mostrar un valor por defecto
-                nombreUsuario.text = "Usuario de Google"
-            }
-
-            if (!googleEmail.isNullOrEmpty()) {
-                correo.text = googleEmail
-            } else {
-                correo.text = "Correo de Google no disponible"
-            }
-
-            // El número de teléfono puede no estar disponible directamente del perfil de Google
-            // Tendrías que solicitarlo explícitamente o permitir que el usuario lo añada/edite.
-            if (telefonoUsuario.text.isEmpty()) {
-                telefonoUsuario.text = "No disponible"
-            }
-
-            // También intentamos cargar datos adicionales de Firestore (por si el usuario añadió un teléfono)
             database.collection("users").document(currentUser.uid)
                 .get()
                 .addOnSuccessListener { document ->
                     if (document.exists()) {
+                        val username = document.getString("username")
                         val phone = document.getString("phone")
-                        if (!phone.isNullOrEmpty() && telefonoUsuario.text == "No disponible") {
-                            telefonoUsuario.text = formatPhoneNumber(phone)
-                        }
-                        // Puedes cargar otros datos de Firestore aquí si los tienes
+
+                        nombreUsuario.text = username ?: currentUser.displayName ?: "Usuario"
+                        correo.text = currentUser.email ?: "Correo no disponible"
+                        telefonoUsuario.text = if (!phone.isNullOrEmpty()) formatPhoneNumber(phone) else "No disponible"
                     }
                 }
                 .addOnFailureListener { exception ->
-                    Log.d("PerfilActivity", "Error al cargar datos adicionales de Firestore: ${exception.message}")
+                    Log.d("PerfilActivity", "Error al cargar datos de Firestore: ${exception.message}")
+                    nombreUsuario.text = currentUser.displayName ?: "Usuario"
+                    correo.text = currentUser.email ?: "Correo no disponible"
+                    telefonoUsuario.text = "No disponible"
                 }
-
         } else {
             Toast.makeText(this, "Error: Usuario no autenticado", Toast.LENGTH_SHORT).show()
-            // Si no hay usuario autenticado, podrías redirigir al login
             startActivity(Intent(this, LoginActivity::class.java))
             finish()
         }
     }
 
+
     private fun formatPhoneNumber(phoneNumber: String): String {
-        return if (phoneNumber.length >= 6) {
-            phoneNumber.substring(0, 6) + "*******"
+        return if (phoneNumber.length > 4) {
+            phoneNumber.take(4) + "*".repeat(phoneNumber.length - 4)
         } else {
             phoneNumber
         }
     }
+
 
     private fun mostrarDialogoEditarTelefono() {
         val builder = AlertDialog.Builder(this)

@@ -1,14 +1,16 @@
 package com.example.navarrafutbol.adapter
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.navarrafutbol.R
+import com.example.navarrafutbol.ViewHolder.CategoriaViewHolder
 import com.example.navarrafutbol.model.Categoria
 
-class CategoriaAdapter(private val categorias: List<Categoria>) : RecyclerView.Adapter<CategoriaAdapter.CategoriaViewHolder>() {
+class CategoriaAdapter(categorias: List<Categoria>) : RecyclerView.Adapter<CategoriaViewHolder>() {
+
+    private var categorias: List<Categoria> = categorias
+    private var categoriasOriginal: List<Categoria> = categorias.toList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoriaViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_categoria, parent, false)
@@ -16,17 +18,32 @@ class CategoriaAdapter(private val categorias: List<Categoria>) : RecyclerView.A
     }
 
     override fun onBindViewHolder(holder: CategoriaViewHolder, position: Int) {
-        val categoria = categorias[position]
-        holder.bind(categoria)
+        holder.bind(categorias[position])
     }
 
-    override fun getItemCount(): Int = categorias.size
+    override fun getItemCount() = categorias.size
 
-    inner class CategoriaViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val nombreCategoria: TextView = itemView.findViewById(R.id.tvCategoria)
+    fun filtrarPorEquipo(query: String) {
+        if (query.isBlank()) {
+            categorias = categoriasOriginal
+        } else {
+            categorias = categoriasOriginal.map { categoria ->
+                val gruposFiltrados = categoria.gruposWrapper.grupos.orEmpty().map { grupo ->
+                    val partidosFiltrados = grupo.partidosWrapper.partidos.orEmpty().filter {
+                        it.local.nombre.contains(query, true) || it.visitante.nombre.contains(query, true)
+                    }
+                    grupo.copy(partidosWrapper = grupo.partidosWrapper.copy(partidos = partidosFiltrados))
+                }.filter { it.partidosWrapper.partidos.isNotEmpty() }
 
-        fun bind(categoria: Categoria) {
-            nombreCategoria.text = categoria.nombre
+                categoria.copy(gruposWrapper = categoria.gruposWrapper.copy(grupos = gruposFiltrados))
+            }.filter { it.gruposWrapper.grupos.isNotEmpty() }
         }
+        notifyDataSetChanged()
+    }
+
+    fun setCategorias(categorias: List<Categoria>) {
+        this.categorias = categorias
+        this.categoriasOriginal = categorias.toList()
+        notifyDataSetChanged()
     }
 }
