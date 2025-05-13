@@ -1,56 +1,64 @@
 package com.example.navarrafutbol
 
-
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.widget.LinearLayout
-import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.example.navarrafutbol.adapter.ClasificacionAdapter
-import com.example.navarrafutbol.model.Clasificacion
+import com.example.navarrafutbol.adapter.*
+import com.example.navarrafutbol.databinding.ActivityClasificacionBinding
 import com.example.navarrafutbol.retrofit.RetrofitClient
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import com.example.navarrafutbol.service.NavarraFutbolApi
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import android.util.Log
+
 
 class ClasificacionActivity : AppCompatActivity() {
 
+    private lateinit var binding: ActivityClasificacionBinding
+    private lateinit var apiService: NavarraFutbolApi
+    private lateinit var adapter: ClasificacionAdapter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_clasificacion)
+        binding = ActivityClasificacionBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        val grupoIds = intent.getIntArrayExtra("grupoIds") ?: intArrayOf()
-        val nombreCategoria = intent.getStringExtra("nombreCategoria") ?: ""
+        val categoriaId = intent.getIntExtra("categoriaId", -1)
+        if (categoriaId == -1) {
+            Toast.makeText(this, "Categoría inválida", Toast.LENGTH_SHORT).show()
+            finish()
+            return
+        }
 
-        findViewById<TextView>(R.id.tituloCategoria).text = nombreCategoria
+        apiService = RetrofitClient.getInstance().create(NavarraFutbolApi::class.java)
 
-        for (grupoId in grupoIds) {
-            CoroutineScope(Dispatchers.IO).launch {
-                val response = RetrofitClient.api.getClasificaciones().execute()
-                val clasificaciones = response.body()?.filter { it.grupoId == grupoId }?.sortedByDescending { it.puntos } ?: emptyList()
+        binding.recyclerView.layoutManager = LinearLayoutManager(this)
 
-                withContext(Dispatchers.Main) {
-                    mostrarGrupo(grupoId, clasificaciones)
+        obtenerClasificacion(categoriaId)
+    }
+
+    private fun obtenerClasificacion(categoriaId: Int) {
+        lifecycleScope.launch {
+            try {
+                val listaGrupos = apiService.getClasificacionPorCategoria(categoriaId)
+
+                if (listaGrupos.isEmpty()) {
+                    Toast.makeText(this@ClasificacionActivity, "Sin datos", Toast.LENGTH_SHORT).show()
+                    return@launch
                 }
+
+                // Si solo quieres mostrar el primer grupo:
+                val grupo = listaGrupos.first()
+                adapter = ClasificacionAdapter(grupo.clasificaciones)
+                binding.recyclerView.adapter = adapter
+
+                // Si quieres mostrar todos los grupos, se requiere adaptar a varios RecyclerView o un Expandable
+            } catch (e: Exception) {
+                Log.e("ClasificacionActivity", "Error cargando clasificación: ${e.message}")
+                Toast.makeText(this@ClasificacionActivity, "Error: ${e.message}", Toast.LENGTH_LONG).show()
             }
         }
     }
-
-    private fun mostrarGrupo(grupoId: Int, clasificaciones: List<Clasificacion>) {
-        val contenedor = findViewById<LinearLayout>(R.id.contenedorGrupos)
-        val inflater = LayoutInflater.from(this)
-        val grupoView = inflater.inflate(R.layout.item_grupo_clasificacion, contenedor, false)
-
-        grupoView.findViewById<TextView>(R.id.tituloGrupo).text = "Grupo $grupoId"
-
-        val recyclerView = grupoView.findViewById<RecyclerView>(R.id.recyclerEquipos)
-        recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.adapter = ClasificacionAdapter(clasificaciones)
-
-        contenedor.addView(grupoView)
-    }
-
 }
+

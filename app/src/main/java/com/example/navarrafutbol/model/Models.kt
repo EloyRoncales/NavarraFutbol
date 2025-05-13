@@ -12,8 +12,8 @@ data class Clasificacion(
     @SerializedName("Id") val id: Int,
     @SerializedName("EquipoId") val equipoId: Int,
     @SerializedName("GrupoId") val grupoId: Int,
-    @SerializedName("Equipo") val equipo: Equipo? = null,
-    @SerializedName("Grupo") val grupo: Grupo? = null,
+    @SerializedName("Equipo") val equipo: Equipo?, // 👈 este debe estar bien
+    @SerializedName("Grupo") val grupo: Grupo?,   // opcional
     @SerializedName("Puntos") val puntos: Int,
     @SerializedName("PartidosJugados") val partidosJugados: Int,
     @SerializedName("PartidosGanados") val partidosGanados: Int,
@@ -23,12 +23,14 @@ data class Clasificacion(
     @SerializedName("GolesContra") val golesContra: Int
 )
 
+
 data class Equipo(
     val id: Int,
     val nombre: String,
     val escudoUrl: String,
     val estadio: String
 )
+
 
 data class EventoPartido(
     val id: Int,
@@ -44,8 +46,10 @@ data class Grupo(
     val id: Int,
     val Grupo: String,
     val Partidos: List<Partido>,
-    val Categoria: Categoria
+    val Categoria: Categoria,
+    val Clasificaciones: List<Clasificacion>? = null
 )
+
 
 
 data class Jugador(
@@ -69,5 +73,29 @@ data class Partido(
     val EquipoLocal: String,
     val EquipoVisitante: String,
     val GolesLocal: Int?,
-    val GolesVisitante: Int?
+    val GolesVisitante: Int?,
+    val EscudoLocalUrl: String?,
+    val EscudoVisitanteUrl: String?
 )
+
+data class GrupoConClasificacion(
+    val id: Int,
+    val grupo: String,
+    val clasificaciones: List<Clasificacion>
+)
+
+data class ClasificacionItem(
+    val id: Int,
+    val equipoId: Int,
+    val grupoId: Int,
+    val puntos: Int,
+    val partidosJugados: Int,
+    val partidosGanados: Int,
+    val partidosEmpatados: Int,
+    val partidosPerdidos: Int,
+    val golesFavor: Int,
+    val golesContra: Int,
+    val equipo: Equipo
+)
+
+

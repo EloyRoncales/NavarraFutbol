@@ -8,6 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.navarrafutbol.R
 import com.example.navarrafutbol.model.Categoria
 import com.example.navarrafutbol.model.Grupo
@@ -94,9 +95,18 @@ class PartidoAdapter(private val items: List<Partido>) :
             "N/A"
         }
 
-        // Si después quieres cargar escudos por URL:
-        // Glide.with(holder.itemView).load(p.EscudoLocalUrl).into(holder.escudoLocal)
-        // Glide.with(holder.itemView).load(p.EscudoVisitanteUrl).into(holder.escudoVisit)
+        Glide.with(holder.itemView)
+            .load(p.EscudoLocalUrl)
+            .placeholder(R.drawable.escudo)
+            .error(R.drawable.escudo)
+            .into(holder.escudoLocal)
+
+        Glide.with(holder.itemView)
+            .load(p.EscudoVisitanteUrl)
+            .placeholder(R.drawable.escudo)
+            .error(R.drawable.escudo)
+            .into(holder.escudoVisit)
+
     }
 
     override fun getItemCount() = items.size

@@ -13,4 +13,6 @@ object RetrofitClient {
         .build()
 
     val api = retrofit.create(NavarraFutbolApi::class.java)
+
+    fun getInstance(): Retrofit = retrofit
 }

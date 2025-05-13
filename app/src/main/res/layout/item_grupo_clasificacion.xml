@@ -1,22 +1,21 @@
-<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:paddingBottom="24dp">
+    android:padding="12dp">
 
     <TextView
-        android:id="@+id/tituloGrupo"
+        android:id="@+id/tvGrupo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Grupo X"
+        android:text="Grupo A"
+        android:textSize="18sp"
         android:textStyle="bold"
-        android:textSize="20sp"
         android:paddingBottom="8dp" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerEquipos"
+        android:id="@+id/rvPartidos"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:nestedScrollingEnabled="false"/>
+        android:nestedScrollingEnabled="false" />
 </LinearLayout>

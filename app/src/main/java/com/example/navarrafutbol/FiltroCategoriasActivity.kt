@@ -29,16 +29,17 @@ class FiltroCategoriasActivity : AppCompatActivity() {
     }
 
     private fun irAClasificacion(categoria: String) {
-        val grupoIds = when (categoria) {
-            "Regional Preferente" -> intArrayOf(101, 102)
-            "Autonómica" -> intArrayOf(103)
-            "Tercera RFEF" -> intArrayOf(100)
-            else -> intArrayOf()
+        val categoriaId = when (categoria) {
+            "Regional Preferente" -> 2
+            "Autonómica" -> 3
+            "Tercera RFEF" -> 1
+            else -> -1
         }
 
         val intent = Intent(this, ClasificacionActivity::class.java)
-        intent.putExtra("grupoIds", grupoIds)
-        intent.putExtra("nombreCategoria", categoria)
+        intent.putExtra("categoriaId", categoriaId)
+        intent.putExtra("nombreCategoria", categoria) // opcional, si quieres mostrar el nombre
         startActivity(intent)
     }
+
 }
