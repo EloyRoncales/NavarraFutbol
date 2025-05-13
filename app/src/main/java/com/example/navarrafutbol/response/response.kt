@@ -11,7 +11,7 @@ data class CategoriaResponse(
 data class CategoriaClasificacionResponse(
     val id: Int,
     val grupo: String,
-    val clasificaciones: List<ClasificacionResponse>
+    val clasificaciones: List<ClasificacionItem>
 )
 
 data class GrupoConClasificacionResponse(

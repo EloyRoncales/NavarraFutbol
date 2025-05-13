@@ -7,6 +7,6 @@
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
     <color name="light_grey">#D3D3D3</color>
-    <color name="verde_top1">#C8E6C9</color> <!-- Verde suave -->
-    <color name="rojo_ultimos">#FFCDD2</color> <!-- Rojo suave -->
+    <color name="verde_resaltado">#D0F0C0</color>
+    <color name="rojo_resaltado">#F8D7DA</color>
 </resources>

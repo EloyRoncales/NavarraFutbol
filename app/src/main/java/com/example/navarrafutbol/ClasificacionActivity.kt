@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.navarrafutbol.adapter.*
-import com.example.navarrafutbol.databinding.ActivityClasificacionBinding
+import com.example.navarrafutbol.databinding.*
 import com.example.navarrafutbol.retrofit.RetrofitClient
 import com.example.navarrafutbol.service.NavarraFutbolApi
 import kotlinx.coroutines.launch
@@ -17,7 +17,7 @@ class ClasificacionActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityClasificacionBinding
     private lateinit var apiService: NavarraFutbolApi
-    private lateinit var adapter: ClasificacionAdapter
+    private lateinit var adapter: ClasificacionPadreAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,9 +48,7 @@ class ClasificacionActivity : AppCompatActivity() {
                     return@launch
                 }
 
-                // Si solo quieres mostrar el primer grupo:
-                val grupo = listaGrupos.first()
-                adapter = ClasificacionAdapter(grupo.clasificaciones)
+                adapter = ClasificacionPadreAdapter(listaGrupos)
                 binding.recyclerView.adapter = adapter
 
                 // Si quieres mostrar todos los grupos, se requiere adaptar a varios RecyclerView o un Expandable

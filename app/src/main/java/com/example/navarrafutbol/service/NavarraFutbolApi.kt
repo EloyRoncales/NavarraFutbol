@@ -36,7 +36,7 @@ interface NavarraFutbolApi {
     @GET("api/clasificaciones/{categoriaId}/clasificacion")
     suspend fun getClasificacionPorCategoria(
         @Path("categoriaId") id: Int
-    ): List<GrupoResponse>
+    ): List<CategoriaClasificacionResponse>
 
 
     @GET("api/Clasificacion/grupos-con-clasificacion")
