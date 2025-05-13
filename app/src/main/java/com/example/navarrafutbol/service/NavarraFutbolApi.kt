@@ -1,6 +1,7 @@
 package com.example.navarrafutbol.service
 
-import com.example.navarrafutbol.model.Categoria
+import com.example.navarrafutbol.model.*
+import com.example.navarrafutbol.model.*
 import com.example.navarrafutbol.response.CategoriaResponse
 import retrofit2.Call
 import retrofit2.http.GET
@@ -19,4 +20,16 @@ interface NavarraFutbolApi {
 
     @GET("api/partidos/categoria/{categoriaId}/partidos")
     suspend fun getPartidos(@Path("categoriaId") id: Int): Categoria
+
+    @GET("api/clasificaciones")
+    fun getClasificaciones(): Call<List<Clasificacion>>
+
+    @GET("Api/equipos")
+    fun getEquipos(): Call<List<Equipo>>
+
+    @GET("api/Grupos")
+    fun getGrupos(): Call<List<Grupo>>
+
+
+
 }
