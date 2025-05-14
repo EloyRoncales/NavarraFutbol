@@ -20,12 +20,12 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:id="@+id/filtroImageView"
+            android:id="@+id/podioImageView"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_margin="8dp"
-            android:contentDescription="Filtrar"
-            android:src="@drawable/filtrar" />
+            android:contentDescription="Podio"
+            android:src="@drawable/podio" />
 
         <SearchView
             android:id="@+id/svBuscarEquipo"

@@ -60,8 +60,10 @@ class ClasificacionAdapter(private val lista: List<ClasificacionItem>) :
                 intent.putExtra("nombre", item.equipo.nombre)
                 intent.putExtra("estadio", item.equipo.estadio)
                 intent.putExtra("escudoUrl", item.equipo.escudoUrl)
+                intent.putExtra("equipoId", item.equipo.id)
                 context.startActivity(intent)
             }
+
         }
 
     }
@@ -92,4 +94,5 @@ class ClasificacionPadreAdapter(private val grupos: List<CategoriaClasificacionR
 
     override fun getItemCount(): Int = grupos.size
 }
+
 

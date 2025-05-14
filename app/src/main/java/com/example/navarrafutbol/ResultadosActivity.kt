@@ -36,7 +36,7 @@ class ResultadosActivity : AppCompatActivity() {
         svBuscar             = findViewById(R.id.svBuscarEquipo)
         bottomNavigation     = findViewById(R.id.bottomNavigation)
 
-        val ivFiltro = findViewById<ImageView>(R.id.filtroImageView)
+        val ivFiltro = findViewById<ImageView>(R.id.podioImageView)
         ivFiltro.setOnClickListener {
             startActivity(Intent(this, FiltroCategoriasActivity::class.java))
         }

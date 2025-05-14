@@ -43,7 +43,10 @@ interface NavarraFutbolApi {
     suspend fun getGruposConClasificacion(): List<GrupoConClasificacion>
 
 
-
+    @GET("api/Jugadores/equipo/{equipoId}")
+    suspend fun getJugadoresPorEquipo(
+        @Path("equipoId") equipoId: Int
+    ): List<Jugador>
 
 
 }

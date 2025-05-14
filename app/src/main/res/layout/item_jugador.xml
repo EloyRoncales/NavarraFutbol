@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="12dp">
+
+    <TextView
+        android:id="@+id/textNombreJugador"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Nombre"
+        android:textSize="16sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/textPosicionJugador"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Posición"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/textEdadJugador"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Edad"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/textGolesJugador"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Goles"
+        android:textSize="14sp" />
+</LinearLayout>
