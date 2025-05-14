@@ -64,7 +64,8 @@ class RegisterActivity : AppCompatActivity() {
                             val userMap = hashMapOf(
                                 "username" to username,
                                 "email" to email,
-                                "phone" to phone
+                                "phone" to phone,
+                                "favoritos" to emptyList<Long>()
                             )
                             db.collection("users").document(user.uid)
                                 .set(userMap)

@@ -80,6 +80,7 @@ class PerfilActivity : AppCompatActivity() {
                     true
                 }
                 R.id.nav_favorites -> {
+                    startActivity(Intent(this, FavoritosActivity::class.java))
                     true
                 }
                 R.id.nav_profile -> {

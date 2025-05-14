@@ -32,6 +32,8 @@
         <activity android:name=".DetalleNoticiaActivity"/>
         <activity android:name=".ClasificacionActivity" />
         <activity android:name=".EquipoDetalleActivity" />
+        <activity android:name=".FavoritosActivity" />
+
 
 
     </application>

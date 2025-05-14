@@ -1,11 +1,7 @@
 package com.example.navarrafutbol.service
 
 import com.example.navarrafutbol.model.*
-import com.example.navarrafutbol.model.*
-import com.example.navarrafutbol.response.CategoriaClasificacionResponse
-import com.example.navarrafutbol.response.CategoriaResponse
-import com.example.navarrafutbol.response.ClasificacionResponse
-import com.example.navarrafutbol.response.GrupoResponse
+import com.example.navarrafutbol.response.*
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -47,6 +43,9 @@ interface NavarraFutbolApi {
     suspend fun getJugadoresPorEquipo(
         @Path("equipoId") equipoId: Int
     ): List<Jugador>
+
+    @GET("api/equipos/{id}")
+    suspend fun getEquipo(@Path("id") id: Int): EquipoFav?
 
 
 }

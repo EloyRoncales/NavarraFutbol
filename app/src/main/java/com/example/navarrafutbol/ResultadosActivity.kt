@@ -89,7 +89,10 @@ class ResultadosActivity : AppCompatActivity() {
                     true
                 }
                 R.id.nav_results -> true
-                R.id.nav_favorites -> true
+                R.id.nav_favorites -> {
+                    startActivity(Intent(this, FavoritosActivity::class.java))
+                    true
+                }
                 R.id.nav_profile -> {
                     startActivity(Intent(this, PerfilActivity::class.java))
                     true
