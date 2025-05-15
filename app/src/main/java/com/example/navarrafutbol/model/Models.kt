@@ -3,11 +3,17 @@ package com.example.navarrafutbol.model
 import com.google.gson.annotations.SerializedName
 import java.io.Serializable
 
+/**
+ * Representa una categoría con su nombre y lista de grupos asociados.
+ */
 data class Categoria(
     val Categoria: String,
     val Grupos: List<Grupo>
 ) : Serializable
 
+/**
+ * Datos de clasificación de un equipo dentro de un grupo.
+ */
 data class Clasificacion(
     @SerializedName("Id") val id: Int,
     @SerializedName("EquipoId") val equipoId: Int,
@@ -23,6 +29,9 @@ data class Clasificacion(
     @SerializedName("GolesContra") val golesContra: Int
 ) : Serializable
 
+/**
+ * Representa un equipo con su nombre, escudo y estadio.
+ */
 data class Equipo(
     val id: Int,
     val nombre: String,
@@ -30,6 +39,9 @@ data class Equipo(
     val estadio: String
 ) : Serializable
 
+/**
+ * Versión del modelo de equipo usado en favoritos (mapeado desde la API).
+ */
 data class EquipoFav(
     @SerializedName("Id") val id: Int,
     @SerializedName("Nombre") val nombre: String,
@@ -37,6 +49,9 @@ data class EquipoFav(
     @SerializedName("Estadio") val estadio: String
 )
 
+/**
+ * Evento ocurrido durante un partido (goles, tarjetas, etc.).
+ */
 data class EventoPartido(
     val id: Int,
     val partidoId: Int,
@@ -47,6 +62,9 @@ data class EventoPartido(
     val minuto: Int
 ) : Serializable
 
+/**
+ * Grupo dentro de una categoría, contiene partidos y clasificaciones.
+ */
 data class Grupo(
     val id: Int,
     val Grupo: String,
@@ -55,6 +73,9 @@ data class Grupo(
     val Clasificaciones: List<Clasificacion>? = null
 ) : Serializable
 
+/**
+ * Información básica de un jugador de fútbol.
+ */
 data class Jugador(
     @SerializedName("Id") val id: Int,
     @SerializedName("Nombre") val nombre: String,
@@ -63,6 +84,9 @@ data class Jugador(
     @SerializedName("Goles") val goles: Int
 ) : Serializable
 
+/**
+ * Representa un partido entre dos equipos, con resultado y escudos.
+ */
 data class Partido(
     val Id: Int,
     val Fecha: String,
@@ -74,12 +98,18 @@ data class Partido(
     val EscudoVisitanteUrl: String?
 ) : Serializable
 
+/**
+ * Modelo combinado que asocia un grupo con su clasificación.
+ */
 data class GrupoConClasificacion(
     val id: Int,
     val grupo: String,
     val clasificaciones: List<Clasificacion>
 ) : Serializable
 
+/**
+ * Item usado para representar una fila de la tabla de clasificación.
+ */
 data class ClasificacionItem(
     val id: Int,
     val equipoId: Int,

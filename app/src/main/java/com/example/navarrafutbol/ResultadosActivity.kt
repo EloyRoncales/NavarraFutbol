@@ -18,6 +18,14 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
 
+/**
+ * Actividad que muestra los resultados de partidos organizados por categorías.
+ *
+ * Esta pantalla:
+ * - Recupera los partidos desde la API REST mediante Retrofit.
+ * - Permite filtrar equipos en tiempo real mediante un `SearchView`.
+ * - Ofrece navegación inferior a otras secciones de la app.
+ */
 class ResultadosActivity : AppCompatActivity() {
 
     private lateinit var rvResultados: RecyclerView
@@ -26,42 +34,49 @@ class ResultadosActivity : AppCompatActivity() {
     private lateinit var bottomNavigation: BottomNavigationView
     private var todasCategorias: List<Categoria> = emptyList()
 
+    /**
+     * Método principal donde se inicializa la interfaz, se recuperan los datos
+     * y se configura la lógica de filtrado y navegación inferior.
+     *
+     * @param savedInstanceState Estado previamente guardado (si aplica).
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_resultados)
 
-        // 1. Referencias
+        // Inicializa vistas
         rvResultados         = findViewById(R.id.rvResultados)
         progressResultados   = findViewById(R.id.progressResultados)
         svBuscar             = findViewById(R.id.svBuscarEquipo)
         bottomNavigation     = findViewById(R.id.bottomNavigation)
 
+        // Filtro por categorías
         val ivFiltro = findViewById<ImageView>(R.id.podioImageView)
         ivFiltro.setOnClickListener {
             startActivity(Intent(this, FiltroCategoriasActivity::class.java))
         }
 
-        // 2. LayoutManager y estado inicial
+        // Configuración inicial
         rvResultados.layoutManager = LinearLayoutManager(this)
         rvResultados.visibility    = View.GONE
         progressResultados.visibility = View.VISIBLE
         bottomNavigation.selectedItemId = R.id.nav_results
 
-        // 3. Carga de datos
+        // Llamada a la API usando corrutinas
         lifecycleScope.launch {
             val categoryIds = listOf(1, 2, 3)
             val deferred    = categoryIds.map { id -> async { RetrofitClient.api.getPartidos(id) } }
             todasCategorias = deferred.awaitAll()
 
-            // 4. Asignar adapter y ocultar spinner
             rvResultados.adapter = CategoriaAdapter(todasCategorias)
             progressResultados.visibility = View.GONE
             rvResultados.visibility       = View.VISIBLE
         }
 
-        // 5. Filtro en tiempo real
+        // Filtro de búsqueda en tiempo real
         svBuscar.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String) = false
+
             override fun onQueryTextChange(newText: String): Boolean {
                 val filtradas = todasCategorias.map { cat ->
                     cat.copy(
@@ -81,7 +96,7 @@ class ResultadosActivity : AppCompatActivity() {
             }
         })
 
-        // 6. Navegación inferior
+        // Navegación inferior
         bottomNavigation.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.nav_news -> {

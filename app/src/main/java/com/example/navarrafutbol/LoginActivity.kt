@@ -14,6 +14,14 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
 
+/**
+ * Actividad de inicio de sesión del usuario.
+ *
+ * Permite:
+ * - Autenticación con correo y contraseña.
+ * - Inicio de sesión con Google.
+ * - Recordar la sesión usando SharedPreferences.
+ */
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
@@ -29,6 +37,9 @@ class LoginActivity : AppCompatActivity() {
     private val PREF_PASSWORD = "password"
     private val PREF_SESSION_ACTIVE = "sessionActive"
 
+    /**
+     * Inicializa la vista, comprueba sesión guardada y configura autenticación.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
@@ -45,6 +56,7 @@ class LoginActivity : AppCompatActivity() {
         val rememberMeChecked = sharedPreferences.getBoolean(PREF_REMEMBER_ME, false)
         cbRememberMe.isChecked = rememberMeChecked
 
+        // Autologin si el usuario ya está guardado
         if (rememberMeChecked && sharedPreferences.getBoolean(PREF_SESSION_ACTIVE, false)) {
             val storedEmail = sharedPreferences.getString(PREF_EMAIL, "")
             val storedPassword = sharedPreferences.getString(PREF_PASSWORD, "")
@@ -65,10 +77,12 @@ class LoginActivity : AppCompatActivity() {
             finish()
         }
 
+        // Ir a pantalla de registro
         btnGoToRegister.setOnClickListener {
             startActivity(Intent(this, RegisterActivity::class.java))
         }
 
+        // Inicio de sesión con correo y contraseña
         btnLogin.setOnClickListener {
             val email = etUsername.text.toString().trim()
             val password = etPassword.text.toString()
@@ -108,6 +122,7 @@ class LoginActivity : AppCompatActivity() {
                 }
         }
 
+        // Configurar Google Sign-In
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(getString(R.string.default_web_client_id))
             .requestEmail()
@@ -115,12 +130,16 @@ class LoginActivity : AppCompatActivity() {
 
         googleSignInClient = GoogleSignIn.getClient(this, gso)
 
-        findViewById<LinearLayout>(R.id.btnGoogleSignIn).setOnClickListener {  // Corregido aquí
+        // Botón para iniciar sesión con Google
+        findViewById<LinearLayout>(R.id.btnGoogleSignIn).setOnClickListener {
             val signInIntent = googleSignInClient.signInIntent
             startActivityForResult(signInIntent, RC_SIGN_IN)
         }
     }
 
+    /**
+     * Maneja el resultado del intent de Google Sign-In.
+     */
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
@@ -136,6 +155,11 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Autentica en Firebase usando la cuenta de Google del usuario.
+     *
+     * @param idToken Token recibido tras el login con Google.
+     */
     private fun firebaseAuthWithGoogle(idToken: String) {
         val credential = GoogleAuthProvider.getCredential(idToken, null)
         auth.signInWithCredential(credential)
@@ -150,15 +174,14 @@ class LoginActivity : AppCompatActivity() {
 
                     val db = FirebaseFirestore.getInstance()
 
-                    // Verificar si el documento del usuario ya existe
+                    // Crear el documento del usuario si no existe
                     db.collection("users").document(user!!.uid).get()
                         .addOnSuccessListener { document ->
                             if (!document.exists()) {
-                                // Crear documento con campos por defecto
                                 val userMap = hashMapOf(
                                     "username" to (user.displayName ?: "Usuario"),
                                     "email" to (user.email ?: ""),
-                                    "phone" to "", // Puedes pedirlo más adelante
+                                    "phone" to "",
                                     "favoritos" to emptyList<Long>()
                                 )
                                 db.collection("users").document(user.uid)
@@ -180,7 +203,9 @@ class LoginActivity : AppCompatActivity() {
             }
     }
 
-
+    /**
+     * Redirige automáticamente si el usuario ya tiene una sesión activa.
+     */
     override fun onStart() {
         super.onStart()
         val sharedPreferences = getSharedPreferences("loginPrefs", Context.MODE_PRIVATE)

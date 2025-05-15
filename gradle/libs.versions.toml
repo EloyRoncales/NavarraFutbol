@@ -42,4 +42,4 @@ androidx-navigation-compose-jvmstubs = { group = "androidx.navigation", name = "
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 jetbrainsKotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
-
+dokka = { id = "org.jetbrains.dokka", version = "1.9.10" }

@@ -12,15 +12,26 @@ import com.example.navarrafutbol.databinding.ActivityEquipoDetalleBinding
 import com.example.navarrafutbol.model.Jugador
 import com.example.navarrafutbol.retrofit.RetrofitClient
 import com.example.navarrafutbol.service.NavarraFutbolApi
-import kotlinx.coroutines.launch
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.launch
 
-
+/**
+ * Actividad que muestra los detalles de un equipo seleccionado.
+ *
+ * Incluye:
+ * - Nombre, estadio y escudo del equipo.
+ * - Lista de jugadores obtenida desde la API.
+ * - Posibilidad de añadir o quitar el equipo de favoritos del usuario.
+ */
 class EquipoDetalleActivity : AppCompatActivity() {
+
     private lateinit var binding: ActivityEquipoDetalleBinding
 
-
+    /**
+     * Carga los detalles del equipo desde el intent y la API,
+     * e inicializa los controles de favoritos y lista de jugadores.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityEquipoDetalleBinding.inflate(layoutInflater)
@@ -36,11 +47,12 @@ class EquipoDetalleActivity : AppCompatActivity() {
         val user = auth.currentUser
         val uid = user?.uid
 
-
+        // Mostrar información general del equipo
         binding.textNombre.text = nombre
         binding.textEstadio.text = "Estadio: $estadio"
         Glide.with(this).load(escudoUrl).into(binding.imageEscudo)
 
+        // Comprobar si el equipo está en favoritos
         uid?.let { userId ->
             val docRef = db.collection("users").document(userId)
             docRef.get().addOnSuccessListener { document ->
@@ -56,7 +68,7 @@ class EquipoDetalleActivity : AppCompatActivity() {
             }
         }
 
-
+        // Añadir o eliminar equipo de favoritos
         binding.btnFavorito.setOnClickListener {
             uid?.let {
                 val docRef = db.collection("users").document(it)
@@ -79,7 +91,7 @@ class EquipoDetalleActivity : AppCompatActivity() {
             }
         }
 
-
+        // Configurar RecyclerView de jugadores
         binding.recyclerJugadores.layoutManager = LinearLayoutManager(this)
 
         if (equipoId != -1) {

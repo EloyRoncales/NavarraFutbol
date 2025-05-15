@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.jetbrainsKotlinAndroid)
     id("com.google.gms.google-services")
     id ("org.jetbrains.kotlin.kapt")
+    alias(libs.plugins.dokka)
 }
 
 android {
@@ -103,4 +104,8 @@ dependencies {
 
 
 
+}
+
+tasks.dokkaHtml.configure {
+    outputDirectory.set(buildDir.resolve("dokka"))
 }

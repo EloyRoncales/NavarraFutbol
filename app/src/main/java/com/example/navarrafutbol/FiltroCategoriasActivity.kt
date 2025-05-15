@@ -5,8 +5,17 @@ import android.os.Bundle
 import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 
+/**
+ * Actividad que permite seleccionar una categoría para ver su clasificación.
+ *
+ * Al pulsar en una de las opciones (Regional Preferente, Autonómica o Tercera RFEF),
+ * se redirige a [ClasificacionActivity] con el ID correspondiente.
+ */
 class FiltroCategoriasActivity : AppCompatActivity() {
 
+    /**
+     * Inicializa los botones de selección de categoría y define sus acciones.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_filtro_ligas)
@@ -28,6 +37,11 @@ class FiltroCategoriasActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Redirige a la pantalla de clasificación enviando el ID y nombre de la categoría.
+     *
+     * @param categoria Nombre de la categoría seleccionada.
+     */
     private fun irAClasificacion(categoria: String) {
         val categoriaId = when (categoria) {
             "Regional Preferente" -> 2
@@ -36,10 +50,10 @@ class FiltroCategoriasActivity : AppCompatActivity() {
             else -> -1
         }
 
-        val intent = Intent(this, ClasificacionActivity::class.java)
-        intent.putExtra("categoriaId", categoriaId)
-        intent.putExtra("nombreCategoria", categoria) // opcional, si quieres mostrar el nombre
+        val intent = Intent(this, ClasificacionActivity::class.java).apply {
+            putExtra("categoriaId", categoriaId)
+            putExtra("nombreCategoria", categoria)
+        }
         startActivity(intent)
     }
-
 }

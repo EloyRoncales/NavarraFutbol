@@ -4,11 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.widget.Button
-import android.widget.EditText
-import android.widget.LinearLayout
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -16,7 +12,17 @@ import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
+/**
+ * Actividad que muestra y gestiona el perfil del usuario.
+ *
+ * Funcionalidades:
+ * - Cargar información del usuario desde Firebase Firestore.
+ * - Editar número de teléfono.
+ * - Cambiar contraseña con reautenticación.
+ * - Cerrar sesión y borrar preferencias.
+ */
 class PerfilActivity : AppCompatActivity() {
+
     private lateinit var database: FirebaseFirestore
     private lateinit var auth: FirebaseAuth
     private lateinit var nombreUsuario: TextView
@@ -27,6 +33,9 @@ class PerfilActivity : AppCompatActivity() {
     private lateinit var btnLogout: Button
     private lateinit var bottomNavigation: BottomNavigationView
 
+    /**
+     * Inicializa la interfaz de perfil, carga datos y configura listeners.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_perfil)
@@ -83,14 +92,16 @@ class PerfilActivity : AppCompatActivity() {
                     startActivity(Intent(this, FavoritosActivity::class.java))
                     true
                 }
-                R.id.nav_profile -> {
-                    true
-                }
+                R.id.nav_profile -> true
                 else -> false
             }
         }
     }
 
+    /**
+     * Carga los datos del usuario autenticado desde Firestore.
+     * Si no hay sesión, redirige al login.
+     */
     private fun cargarDatosUsuario() {
         val currentUser = auth.currentUser
         if (currentUser != null) {
@@ -119,7 +130,9 @@ class PerfilActivity : AppCompatActivity() {
         }
     }
 
-
+    /**
+     * Formatea el número de teléfono ocultando todos los dígitos salvo los primeros 4.
+     */
     private fun formatPhoneNumber(phoneNumber: String): String {
         return if (phoneNumber.length > 4) {
             phoneNumber.take(4) + "*".repeat(phoneNumber.length - 4)
@@ -128,7 +141,9 @@ class PerfilActivity : AppCompatActivity() {
         }
     }
 
-
+    /**
+     * Muestra un diálogo para ingresar un nuevo número de teléfono.
+     */
     private fun mostrarDialogoEditarTelefono() {
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Editar número de teléfono")
@@ -150,6 +165,9 @@ class PerfilActivity : AppCompatActivity() {
         builder.show()
     }
 
+    /**
+     * Guarda el nuevo número de teléfono en Firestore.
+     */
     private fun actualizarTelefonoEnFirestore(nuevoTelefono: String) {
         auth.currentUser?.uid?.let { userId ->
             database.collection("users").document(userId)
@@ -165,6 +183,9 @@ class PerfilActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Muestra un cuadro de diálogo solicitando reautenticación para poder cambiar la contraseña.
+     */
     private fun mostrarDialogoReautenticar() {
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Reautenticar")
@@ -195,6 +216,9 @@ class PerfilActivity : AppCompatActivity() {
         builder.show()
     }
 
+    /**
+     * Realiza la reautenticación del usuario actual para permitir operaciones sensibles.
+     */
     private fun reautenticarUsuario(email: String, password: String) {
         val user = auth.currentUser
         val credential = EmailAuthProvider.getCredential(email, password)
@@ -210,6 +234,9 @@ class PerfilActivity : AppCompatActivity() {
             }
     }
 
+    /**
+     * Muestra un diálogo para que el usuario ingrese su nueva contraseña.
+     */
     private fun mostrarDialogoCambiarPassword() {
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Cambiar contraseña")
@@ -239,6 +266,9 @@ class PerfilActivity : AppCompatActivity() {
         builder.show()
     }
 
+    /**
+     * Actualiza la contraseña del usuario en Firebase Authentication.
+     */
     private fun cambiarPassword(newPassword: String) {
         val user = auth.currentUser
 
@@ -246,7 +276,6 @@ class PerfilActivity : AppCompatActivity() {
             ?.addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     Toast.makeText(this, "Contraseña actualizada correctamente", Toast.LENGTH_SHORT).show()
-                    // Opcional: Volver a iniciar sesión o cerrar sesión para seguridad
                 } else {
                     Toast.makeText(this, "Error al actualizar la contraseña: ${task.exception?.message}", Toast.LENGTH_LONG).show()
                     Log.e("PerfilActivity", "Error al actualizar la contraseña", task.exception)

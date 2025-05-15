@@ -14,6 +14,14 @@ import com.google.gson.Gson
 import okhttp3.*
 import java.io.IOException
 
+/**
+ * Actividad que muestra una lista de noticias deportivas obtenidas de una API externa.
+ *
+ * Funcionalidades:
+ * - Recuperar noticias usando OkHttp.
+ * - Mostrar un indicador de carga mientras se realiza la solicitud.
+ * - Navegación inferior para ir a otras secciones.
+ */
 class NoticiasActivity : AppCompatActivity() {
 
     private lateinit var recycler: RecyclerView
@@ -21,11 +29,14 @@ class NoticiasActivity : AppCompatActivity() {
     private lateinit var bottomNavigation: BottomNavigationView
     private val baseUrl = "https://noticiasapi-16ka.onrender.com/api/"
 
+    /**
+     * Inicializa la vista y comienza la carga de noticias.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_noticias)
 
-        // 1. Referencias y estado inicial
+        // Referencias de vistas
         recycler           = findViewById(R.id.recyclerNoticias)
         progressNoticias   = findViewById(R.id.progressNoticias)
         bottomNavigation   = findViewById(R.id.bottomNavigation)
@@ -36,7 +47,7 @@ class NoticiasActivity : AppCompatActivity() {
 
         obtenerNoticias()
 
-        // Navegación inferior
+        // Configuración de navegación inferior
         bottomNavigation.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.nav_news -> true
@@ -57,6 +68,9 @@ class NoticiasActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * Realiza una solicitud HTTP a la API de noticias y carga la lista en el RecyclerView.
+     */
     private fun obtenerNoticias() {
         val client  = OkHttpClient()
         val request = Request.Builder()
@@ -64,26 +78,33 @@ class NoticiasActivity : AppCompatActivity() {
             .build()
 
         client.newCall(request).enqueue(object : Callback {
+
+            /**
+             * Maneja fallos de red mostrando un mensaje de error.
+             */
             override fun onFailure(call: Call, e: IOException) {
                 runOnUiThread {
                     Toast.makeText(this@NoticiasActivity, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
-                    // Ocultamos spinner aunque falle
                     progressNoticias.visibility = View.GONE
                 }
             }
 
+            /**
+             * Procesa la respuesta de la API y muestra las noticias en la interfaz.
+             */
             override fun onResponse(call: Call, response: Response) {
                 response.body?.string()?.let {
                     val listaNoticias = Gson().fromJson(it, Array<Noticia>::class.java).toList()
                     runOnUiThread {
                         recycler.adapter = NoticiasAdapter(listaNoticias) { noticia ->
-                            val intent = Intent(this@NoticiasActivity, DetalleNoticiaActivity::class.java)
-                            intent.putExtra("titulo", noticia.titulo)
-                            intent.putExtra("autor", noticia.autor)
-                            intent.putExtra("contenido", noticia.contenido)
+                            val intent = Intent(this@NoticiasActivity, DetalleNoticiaActivity::class.java).apply {
+                                putExtra("titulo", noticia.titulo)
+                                putExtra("autor", noticia.autor)
+                                putExtra("contenido", noticia.contenido)
+                            }
                             startActivity(intent)
                         }
-                        // Ocultar spinner y mostrar lista
+
                         progressNoticias.visibility = View.GONE
                         recycler.visibility         = View.VISIBLE
                     }

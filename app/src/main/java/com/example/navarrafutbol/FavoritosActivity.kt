@@ -9,7 +9,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.navarrafutbol.adapter.EquipoAdapter
 import com.example.navarrafutbol.databinding.ActivityFavoritosBinding
-import com.example.navarrafutbol.model.Equipo
 import com.example.navarrafutbol.model.EquipoFav
 import com.example.navarrafutbol.retrofit.RetrofitClient
 import com.example.navarrafutbol.service.NavarraFutbolApi
@@ -18,17 +17,31 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.launch
 
+/**
+ * Actividad que muestra los equipos favoritos del usuario autenticado.
+ *
+ * Funcionalidades:
+ * - Carga desde Firestore la lista de IDs de equipos marcados como favoritos.
+ * - Consulta los detalles de cada equipo desde la API.
+ * - Muestra los equipos en un RecyclerView.
+ * - Permite acceder al detalle de cada equipo.
+ */
 class FavoritosActivity : AppCompatActivity() {
+
     private lateinit var binding: ActivityFavoritosBinding
     private val db = FirebaseFirestore.getInstance()
     private val apiService = RetrofitClient.getInstance().create(NavarraFutbolApi::class.java)
     private lateinit var bottomNavigation: BottomNavigationView
 
+    /**
+     * Inicializa la vista y carga la lista de favoritos del usuario actual.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityFavoritosBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // Configuración de navegación inferior
         bottomNavigation = findViewById(R.id.bottomNavigation)
         bottomNavigation.selectedItemId = R.id.nav_favorites
 
@@ -42,7 +55,7 @@ class FavoritosActivity : AppCompatActivity() {
                     startActivity(Intent(this, ResultadosActivity::class.java))
                     true
                 }
-                R.id.nav_favorites -> true // Ya estás en favoritos
+                R.id.nav_favorites -> true
                 R.id.nav_profile -> {
                     startActivity(Intent(this, PerfilActivity::class.java))
                     true
@@ -51,6 +64,7 @@ class FavoritosActivity : AppCompatActivity() {
             }
         }
 
+        // Configuración del RecyclerView
         binding.recyclerFavoritos.layoutManager = LinearLayoutManager(this)
 
         val uid = FirebaseAuth.getInstance().currentUser?.uid
@@ -60,6 +74,7 @@ class FavoritosActivity : AppCompatActivity() {
             return
         }
 
+        // Obtener lista de favoritos desde Firebase
         db.collection("users").document(uid).get().addOnSuccessListener { document ->
             val favoritos = (document.get("favoritos") as? List<Long>) ?: emptyList()
 
@@ -68,6 +83,7 @@ class FavoritosActivity : AppCompatActivity() {
                 return@addOnSuccessListener
             }
 
+            // Obtener información detallada de cada equipo favorito desde la API
             lifecycleScope.launch {
                 try {
                     val equiposCompletos = mutableListOf<EquipoFav>()
@@ -96,6 +112,5 @@ class FavoritosActivity : AppCompatActivity() {
         }.addOnFailureListener {
             Toast.makeText(this, "Error accediendo a Firebase", Toast.LENGTH_SHORT).show()
         }
-
     }
 }
