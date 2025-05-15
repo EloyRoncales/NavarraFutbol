@@ -12,6 +12,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.firestore.FirebaseFirestore
 
 class LoginActivity : AppCompatActivity() {
 
@@ -140,19 +141,45 @@ class LoginActivity : AppCompatActivity() {
         auth.signInWithCredential(credential)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
+                    val user = auth.currentUser
                     val sharedPreferences = getSharedPreferences("loginPrefs", Context.MODE_PRIVATE)
                     val editor = sharedPreferences.edit()
                     editor.putBoolean(PREF_REMEMBER_ME, true)
                     editor.putBoolean(PREF_SESSION_ACTIVE, true)
                     editor.apply()
-                    startActivity(Intent(this, ResultadosActivity::class.java))
-                    finish()
+
+                    val db = FirebaseFirestore.getInstance()
+
+                    // Verificar si el documento del usuario ya existe
+                    db.collection("users").document(user!!.uid).get()
+                        .addOnSuccessListener { document ->
+                            if (!document.exists()) {
+                                // Crear documento con campos por defecto
+                                val userMap = hashMapOf(
+                                    "username" to (user.displayName ?: "Usuario"),
+                                    "email" to (user.email ?: ""),
+                                    "phone" to "", // Puedes pedirlo más adelante
+                                    "favoritos" to emptyList<Long>()
+                                )
+                                db.collection("users").document(user.uid)
+                                    .set(userMap)
+                                    .addOnSuccessListener {
+                                        Log.d("LoginActivity", "Documento de usuario creado exitosamente")
+                                    }
+                                    .addOnFailureListener { e ->
+                                        Log.e("LoginActivity", "Error al crear documento del usuario", e)
+                                    }
+                            }
+                            startActivity(Intent(this, ResultadosActivity::class.java))
+                            finish()
+                        }
                 } else {
                     Toast.makeText(this, "Fallo en autenticación con Firebase", Toast.LENGTH_SHORT).show()
                     Log.w("LoginActivity", "firebaseAuthWithGoogle - Authentication failed", task.exception)
                 }
             }
     }
+
 
     override fun onStart() {
         super.onStart()
